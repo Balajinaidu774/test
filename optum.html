@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Modern Live Clock</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #e0eafc, #cfdef3);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .clock-container {
+      background: white;
+      padding: 2.5rem 3rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 300px;
+      width: 100%;
+    }
+
+    #time {
+      font-size: 3rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    #date {
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+
+    .toggle {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .toggle:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="clock-container">
+    <div id="time">--:--:--</div>
+    <div id="date">Loading date...</div>
+    <button class="toggle" onclick="toggleFormat()">Switch to 24-Hour</button>
+  </div>
+
+  <script>
+    let use24Hour = false;
+
+    function updateClock() {
+      const now = new Date();
+
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+
+      let ampm = '';
+      if (!use24Hour) {
+        ampm = hours >= 12 ? ' PM' : ' AM';
+        hours = hours % 12 || 12; // convert 0 to 12
+      }
+
+      const displayTime = `${String(hours).padStart(2, '0')}:${minutes}:${seconds}${!use24Hour ? ampm : ''}`;
+      document.getElementById('time').textContent = displayTime;
+
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const formattedDate = now.toLocaleDateString(undefined, options);
+      document.getElementById('date').textContent = formattedDate;
+    }
+
+    function toggleFormat() {
+      use24Hour = !use24Hour;
+      document.querySelector('.toggle').textContent = use24Hour
+        ? 'Switch to 12-Hour'
+        : 'Switch to 24-Hour';
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+
+</body>
+</html>
